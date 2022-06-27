@@ -2,6 +2,9 @@
 
 set -e
 
+# Enable shell extended glob support.
+shopt -s extglob
+
 # Router_check_tool binary path
 PATH_BIN="${TEST_SRCDIR}/envoy"/test/tools/router_check/router_check_tool
 
@@ -108,6 +111,6 @@ fi
 echo "testing missing tests output test cases"
 MISSING_OUTPUT=$("${PATH_BIN}" "-c" "${PATH_CONFIG}/TestRoutes.yaml" "-t" "${PATH_CONFIG}/TestRoutes.golden.proto.json" "--details" "--covall" 2>&1) ||
   echo "${MISSING_OUTPUT:-no-output}"
-if [[ "${MISSING_OUTPUT}" != *"Missing test for host: www2_staging, route: prefix: \"/\""*"Missing test for host: default, route: prefix: \"/api/application_data\""* ]]; then
+if [[ "${MISSING_OUTPUT}" != *"Missing test for host: www2_staging, route: prefix:"+([[:blank:]])"\"/\""*"Missing test for host: default, route: prefix:"+([[:blank:]])"\"/api/application_data\""* ]]; then
   exit 1
 fi
